@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras import layers
 from IPython import display
-from datetime import datetime
 
 def make_generator_model():
     model = tf.keras.Sequential()
@@ -94,9 +93,7 @@ def train(generator, discriminator, cross_entropy, seed, dataset, epochs, summar
 
     # Generate after the final epoch
     display.clear_output(wait=True)
-    print("clear_output")
     generate_and_save_images(generator, epochs, seed)
-    print("generate_and_save_images")
 
 def generate_and_save_images(model, epoch, test_input):
     # Notice `training` is set to False.
@@ -137,16 +134,12 @@ def generate_gif(anim_file):
     try:
         from google.colab import files
     except ImportError:
-        print("from google.colab import files")
+        pass
     else:
         files.download(anim_file)
 
 
 if __name__ == '__main__':
-    current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
-    train_log_dir = 'logs/gans/' + current_time + '/train'
-    train_summary_writer = tf.summary.create_file_writer(train_log_dir)
-
     (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
     train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
     train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
@@ -187,7 +180,5 @@ if __name__ == '__main__':
     train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS, train_summary_writer)
 
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-    print("checkpoint.restore")
     anim_file = 'dcgan.gif'
     generate_gif(anim_file)
-    print("generate_gif")
