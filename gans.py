@@ -6,12 +6,7 @@ from tensorflow.keras import layers
 from IPython import display
 from tensorflow.python.client import device_lib
 
-print("### list_local_devices ###")
-device_lib.list_local_devices()
-print("### list_local_devices ###")
-
 (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
-
 train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
 train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
 
@@ -45,17 +40,6 @@ def make_generator_model():
 
     return model
 
-
-
-generator = make_generator_model()
-
-noise = tf.random.normal([1, 100])
-generated_image = generator(noise, training=False)
-
-plt.imshow(generated_image[0, :, :, 0], cmap='gray')
-
-
-
 def make_discriminator_model():
     model = tf.keras.Sequential()
     model.add(layers.Conv2D(64, (5, 5), strides=(2, 2), padding='same',
@@ -72,9 +56,12 @@ def make_discriminator_model():
 
     return model
 
+generator = make_generator_model()
+# noise = tf.random.normal([1, 100])
+# generated_image = generator(noise, training=False)
 discriminator = make_discriminator_model()
-decision = discriminator(generated_image)
-print (decision)
+# decision = discriminator(generated_image)
+# print (decision)
 
 # This method returns a helper function to compute cross entropy loss
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
@@ -135,9 +122,7 @@ def train(dataset, epochs):
 
     # Produce images for the GIF as we go
     display.clear_output(wait=True)
-    generate_and_save_images(generator,
-                             epoch + 1,
-                             seed)
+    generate_and_save_images(generator, epoch + 1, seed)
 
     # Save the model every 15 epochs
     if (epoch + 1) % 15 == 0:
@@ -147,9 +132,7 @@ def train(dataset, epochs):
 
     # Generate after the final epoch
     display.clear_output(wait=True)
-    generate_and_save_images(generator,
-                             epochs,
-                             seed)
+    generate_and_save_images(generator, epochs, seed)
 
 def generate_and_save_images(model, epoch, test_input):
     # Notice `training` is set to False.
@@ -161,7 +144,6 @@ def generate_and_save_images(model, epoch, test_input):
         plt.imshow(predictions[i, :, :, 0] * 127.5 + 127.5, cmap='gray')
         plt.axis('off')
     plt.savefig('image_at_epoch_{:04d}.png'.format(epoch))
-    plt.show()
 
 train(train_dataset, EPOCHS)
 
@@ -171,7 +153,7 @@ checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 def display_image(epoch_no):
     return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
 
-display_image(EPOCHS)
+# display_image(EPOCHS)
 
 anim_file = 'dcgan.gif'
 
