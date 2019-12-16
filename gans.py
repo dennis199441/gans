@@ -187,6 +187,6 @@ if __name__ == '__main__':
     train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS, train_summary_writer)
 
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-
+    print("checkpoint.restore")
     anim_file = 'dcgan.gif'
     generate_gif(anim_file)
