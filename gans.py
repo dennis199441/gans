@@ -70,8 +70,8 @@ def train_step(generator, discriminator, cross_entropy, images, summary_writer, 
         disc_loss = discriminator_loss(cross_entropy, real_output, fake_output)
 
     with summary_writer.as_default():
-        tf.summary.scalar('gen_loss', gen_loss.result(), step=epoch)
-        tf.summary.scalar('disc_loss', disc_loss.result(), step=epoch)
+        tf.summary.scalar('gen_loss', gen_loss.eval(), step=epoch)
+        tf.summary.scalar('disc_loss', disc_loss.eval(), step=epoch)
 
     gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
     gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
