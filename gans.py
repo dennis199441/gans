@@ -145,7 +145,7 @@ def generate_gif(anim_file):
 
 
 if __name__ == '__main__':
-    current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
     train_log_dir = 'logs/gans/' + current_time + '/train'
     train_summary_writer = tf.summary.create_file_writer(train_log_dir)
 
