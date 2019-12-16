@@ -58,7 +58,7 @@ def generator_loss(cross_entropy, fake_output):
 # Notice the use of `tf.function`
 # This annotation causes the function to be "compiled".
 @tf.function
-def train_step(generator, discriminator, cross_entropy, images):
+def train_step(generator, discriminator, cross_entropy, images, summary_writer, epoch):
     noise = tf.random.normal([BATCH_SIZE, noise_dim])
 
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
@@ -69,18 +69,22 @@ def train_step(generator, discriminator, cross_entropy, images):
         gen_loss = generator_loss(cross_entropy, fake_output)
         disc_loss = discriminator_loss(cross_entropy, real_output, fake_output)
 
+    with summary_writer.as_default():
+        tf.summary.scalar('gen_loss', gen_loss.result(), step=epoch)
+        tf.summary.scalar('disc_loss', disc_loss.result(), step=epoch)
+
     gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
     gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
 
     generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
 
-def train(generator, discriminator, cross_entropy, seed, dataset, epochs):
+def train(generator, discriminator, cross_entropy, seed, dataset, epochs, summary_writer):
     for epoch in range(epochs):
         start = time.time()
 
         for image_batch in dataset:
-            train_step(generator, discriminator, cross_entropy, image_batch)
+            train_step(generator, discriminator, cross_entropy, image_batch, summary_writer, epoch)
 
         # Produce images for the GIF as we go
         display.clear_output(wait=True)
@@ -141,6 +145,10 @@ def generate_gif(anim_file):
 
 
 if __name__ == '__main__':
+    current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    train_log_dir = 'logs/gans/' + current_time + '/train'
+    train_summary_writer = tf.summary.create_file_writer(train_log_dir)
+
     (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
     train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
     train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
@@ -178,7 +186,7 @@ if __name__ == '__main__':
     # to visualize progress in the animated GIF)
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
 
-    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS)
+    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS, train_summary_writer)
 
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
