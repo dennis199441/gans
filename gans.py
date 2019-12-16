@@ -1,14 +1,11 @@
 import tensorflow as tf
-import glob
-import imageio
+import glob, imageio, os, PIL, time
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import PIL
 from tensorflow.keras import layers
-import time
-
 from IPython import display
+from tensorflow.python.client import device_lib
+device_lib.list_local_devices()
 
 (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
 
