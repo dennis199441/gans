@@ -178,7 +178,7 @@ if __name__ == '__main__':
     # to visualize progress in the animated GIF)
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
 
-    train(train_dataset, EPOCHS)
+    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS)
 
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
