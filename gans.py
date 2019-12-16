@@ -57,7 +57,7 @@ def generator_loss(cross_entropy, fake_output):
 # Notice the use of `tf.function`
 # This annotation causes the function to be "compiled".
 @tf.function
-def train_step(generator, discriminator, cross_entropy, images, summary_writer, epoch):
+def train_step(generator, discriminator, cross_entropy, images):
     noise = tf.random.normal([BATCH_SIZE, noise_dim])
 
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
@@ -74,12 +74,12 @@ def train_step(generator, discriminator, cross_entropy, images, summary_writer, 
     generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
 
-def train(generator, discriminator, cross_entropy, seed, dataset, epochs, summary_writer):
+def train(generator, discriminator, cross_entropy, seed, dataset, epochs):
     for epoch in range(epochs):
         start = time.time()
 
         for image_batch in dataset:
-            train_step(generator, discriminator, cross_entropy, image_batch, summary_writer, epoch)
+            train_step(generator, discriminator, cross_entropy, image_batch)
 
         # Produce images for the GIF as we go
         display.clear_output(wait=True)
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     # to visualize progress in the animated GIF)
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
 
-    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS, train_summary_writer)
+    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS)
 
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
     anim_file = 'dcgan.gif'
