@@ -5,7 +5,10 @@ import numpy as np
 from tensorflow.keras import layers
 from IPython import display
 from tensorflow.python.client import device_lib
+
+print("### list_local_devices ###")
 device_lib.list_local_devices()
+print("### list_local_devices ###")
 
 (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
 

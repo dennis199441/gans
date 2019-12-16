@@ -1,7 +1,9 @@
 import tensorflow as tf
 from datetime import datetime
 from tensorflow.python.client import device_lib
+print("### list_local_devices ###")
 device_lib.list_local_devices()
+print("### list_local_devices ###")
 
 logdir = "logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
