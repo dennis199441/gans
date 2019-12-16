@@ -137,7 +137,7 @@ def generate_gif(anim_file):
     try:
         from google.colab import files
     except ImportError:
-        pass
+        print("from google.colab import files")
     else:
         files.download(anim_file)
 
@@ -190,3 +190,4 @@ if __name__ == '__main__':
     print("checkpoint.restore")
     anim_file = 'dcgan.gif'
     generate_gif(anim_file)
+    print("generate_gif")
