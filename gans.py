@@ -1,5 +1,5 @@
 import tensorflow as tf
-import glob, imageio, os, PIL, time
+import glob, imageio, os, PIL, time, sys
 import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras import layers
@@ -12,6 +12,7 @@ train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
 
 BUFFER_SIZE = 60000
 BATCH_SIZE = 256
+noise_dim = 100
 
 # Batch and shuffle the data
 train_dataset = tf.data.Dataset.from_tensor_slices(train_images).shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
@@ -82,12 +83,10 @@ checkpoint_dir = './training_checkpoints'
 checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
 checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  discriminator_optimizer=discriminator_optimizer,
-                                 generator=generator,
-                                 discriminator=discriminator)
+                                 generator=generator, discriminator=discriminator)
 
-EPOCHS = 50
-noise_dim = 100
-num_examples_to_generate = 16
+EPOCHS = sys.argv[1]
+num_examples_to_generate = sys.argv[2]
 
 # We will reuse this seed overtime (so it's easier)
 # to visualize progress in the animated GIF)
@@ -117,18 +116,18 @@ def train(dataset, epochs):
     for epoch in range(epochs):
         start = time.time()
 
-    for image_batch in dataset:
-        train_step(image_batch)
+        for image_batch in dataset:
+            train_step(image_batch)
 
-    # Produce images for the GIF as we go
-    display.clear_output(wait=True)
-    generate_and_save_images(generator, epoch + 1, seed)
+        # Produce images for the GIF as we go
+        display.clear_output(wait=True)
+        generate_and_save_images(generator, epoch + 1, seed)
 
-    # Save the model every 15 epochs
-    if (epoch + 1) % 15 == 0:
-        checkpoint.save(file_prefix = checkpoint_prefix)
+        # Save the model every 15 epochs
+        if (epoch + 1) % 15 == 0:
+            checkpoint.save(file_prefix = checkpoint_prefix)
 
-    print ('Time for epoch {} is {} sec'.format(epoch + 1, time.time()-start))
+        print ('Time for epoch {} is {} sec'.format(epoch + 1, time.time()-start))
 
     # Generate after the final epoch
     display.clear_output(wait=True)
