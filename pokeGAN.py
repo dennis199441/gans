@@ -13,29 +13,35 @@ def make_generator_model():
     model.add(layers.LeakyReLU())
 
     model.add(layers.Reshape((6, 6, 256)))
+    print(model.output_shape)
     assert model.output_shape == (None, 6, 6, 256) # Note: None is the batch size
 
     model.add(layers.Conv2DTranspose(128, (5, 5), strides=(1, 1), padding='same', use_bias=False))
+    print(model.output_shape)
     assert model.output_shape == (None, 6, 6, 128)
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(64, (5, 5), strides=(2, 2), padding='same', use_bias=False))
+    print(model.output_shape)
     assert model.output_shape == (None, 12, 12, 64)
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(32, (5, 5), strides=(2, 2), padding='same', use_bias=False))
+    print(model.output_shape)
     assert model.output_shape == (None, 24, 24, 32)
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(16, (5, 5), strides=(2, 2), padding='same', use_bias=False))
+    print(model.output_shape)
     assert model.output_shape == (None, 48, 48, 16)
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(1, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))
+    print(model.output_shape)
     assert model.output_shape == (None, 96, 96, 3)
 
     return model
