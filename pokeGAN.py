@@ -189,8 +189,7 @@ if __name__ == '__main__':
     checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                      discriminator_optimizer=discriminator_optimizer,
                                      generator=generator, discriminator=discriminator)
-    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-    
+    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir)).assert_consumed()
     EPOCHS = int(sys.argv[1])
     num_examples_to_generate = int(sys.argv[2])
 
