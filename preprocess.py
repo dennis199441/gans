@@ -15,8 +15,15 @@ for i,filename in enumerate(filenames):
     resized_img = img.resize((96,96))
     resized_img.save(new_filename, "png")
 
-print("process done!")
+print("process done!\n\n")
 
+print("original data")
+for i,filename in enumerate(filenames):
+    img = Image.open(filename)
+    array = np.asarray(img)
+    print("filename = {}, shape = {}, bands = {}".format(filename, array.shape, img.getbands()))
+
+print("preprocessed data")
 filenames = glob.glob(output_folder + '/*.png')
 for i,filename in enumerate(filenames):
     img = Image.open(filename)
