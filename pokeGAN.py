@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras import layers
 from IPython import display
+from PIL import Image
 
 def make_generator_model():
     model = tf.keras.Sequential()

@@ -1,5 +1,6 @@
 import glob, PIL
 import numpy as np
+from PIL import Image
 
 def load_data(path):
     filenames = glob.glob(path + '/*.png')
