@@ -11,6 +11,7 @@ def load_data(path):
         imgs.append(array)
     imgs = np.array(imgs)
     print("imgs.shape = {}".format(imgs.shape))
+    return imgs
 
 train_images = load_data("../preprocessed")
 train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
