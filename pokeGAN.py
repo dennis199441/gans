@@ -110,6 +110,9 @@ def generate_and_save_images(model, epoch, test_input):
     # This is so all layers run in inference mode (batchnorm).
     predictions = model(test_input, training=False)
     fig = plt.figure(figsize=(4,4))
+    print(predictions[0, :, :, :])
+    print()
+    print(predictions[0, :, :, :].astype(np.unit8))
     for i in range(predictions.shape[0]):
         plt.subplot(4, 4, i+1)
         plt.imshow(predictions[i, :, :, :])
