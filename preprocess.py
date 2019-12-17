@@ -12,7 +12,7 @@ filenames = glob.glob(folder_name + '/*.png')
 for i,filename in enumerate(filenames):
     img = Image.open(filename)
     new_filename = filename.replace(folder_name, output_folder)
-    resized_img = img.resize((96,96, 3))
+    resized_img = img.resize((96,96))
     resized_img.save(new_filename, "png")
 
 print("process done!")
