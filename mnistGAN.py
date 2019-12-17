@@ -138,14 +138,6 @@ def generate_gif(anim_file):
     else:
         files.download(anim_file)
 
-def load_data():
-    # load pokemon data
-    pass
-
-def preprocess_data():
-    # resize to 96x96, 3 channels(rgb)
-    pass
-
 if __name__ == '__main__':
     (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
     train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
