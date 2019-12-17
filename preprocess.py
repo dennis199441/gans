@@ -21,4 +21,4 @@ filenames = glob.glob(output_folder + '/*.png')
 for i,filename in enumerate(filenames):
     img = Image.open(filename)
     array = np.asarray(img)
-    print("filename = {}, shape = {}".format(filename, array.shape))
+    print("filename = {}, shape = {}, bands = {}".format(filename, array.shape, img.getbands()))
