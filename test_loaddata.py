@@ -7,10 +7,10 @@ def load_data(path):
     imgs = []
     for i,filename in enumerate(filenames):
         img = Image.open(filename)
-        imgs.append(img.copy())
-        img.close()
-    array = np.asarray(imgs)
-    print("array.shape = {}".format(array.shape))
+        array = np.asarray(img)
+        imgs.append(array)
+    imgs = np.array(imgs)
+    print("imgs.shape = {}".format(imgs.shape))
 
 train_images = load_data("../preprocessed")
 train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
