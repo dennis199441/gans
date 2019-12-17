@@ -1,5 +1,6 @@
 from PIL import Image
 import glob, os
+import numpy as np
 
 if not os.path.exists('../preprocessed'):
 	os.mkdir("../preprocessed/")
@@ -12,4 +13,5 @@ for i,filename in enumerate(filenames):
     new_filename = filename.replace(folder_name, "../preprocessed/")
     resized_img = img.resize((96,96))
     resized_img.save(new_filename, "png")
-    print("new_filename = {}, shape = {}".format(new_filename, resized_img.shape))
+    np_array = np.asarray(resized_img)
+    print("new_filename = {}, shape = {}".format(new_filename, np_array.shape))
