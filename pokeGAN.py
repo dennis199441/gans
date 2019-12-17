@@ -45,14 +45,14 @@ def make_discriminator_model():
     model.add(layers.Conv2D(64, (5, 5), strides=(2, 2), padding='same', input_shape=[96, 96, 3]))
     model.add(layers.LeakyReLU())
     model.add(layers.Dropout(0.3))
-    print(model.output_shape)
+
     model.add(layers.Conv2D(128, (5, 5), strides=(2, 2), padding='same'))
     model.add(layers.LeakyReLU())
     model.add(layers.Dropout(0.3))
-    print(model.output_shape)
+
     model.add(layers.Flatten())
     model.add(layers.Dense(1))
-    print(model.output_shape)
+
     return model
 
 def discriminator_loss(cross_entropy, real_output, fake_output):
