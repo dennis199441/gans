@@ -7,7 +7,8 @@ def load_data(path):
     imgs = []
     for i,filename in enumerate(filenames):
         img = Image.open(filename)
-        imgs.append(img)
+        imgs.append(img.copy())
+        img.close()
     array = np.asarray(imgs)
     print("array.shape = {}".format(array.shape))
 
