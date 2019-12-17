@@ -84,7 +84,7 @@ def train_step(generator, discriminator, cross_entropy, images):
     generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
 
-def train(generator, discriminator, cross_entropy, seed, dataset, epochs, checkpoint):
+def train(generator, discriminator, cross_entropy, seed, dataset, epochs):
     for epoch in range(epochs):
         start = time.time()
 
@@ -189,16 +189,16 @@ if __name__ == '__main__':
     checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                      discriminator_optimizer=discriminator_optimizer,
                                      generator=generator, discriminator=discriminator)
-
+    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
+    
     EPOCHS = int(sys.argv[1])
     num_examples_to_generate = int(sys.argv[2])
 
     # We will reuse this seed overtime (so it's easier)
     # to visualize progress in the animated GIF)
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
+    
+    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS)
 
-    train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS, checkpoint)
-
-    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
     anim_file = 'dcgan.gif'
     generate_gif(anim_file)
