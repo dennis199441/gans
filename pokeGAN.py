@@ -138,18 +138,22 @@ def generate_gif(anim_file):
     else:
         files.download(anim_file)
 
-def load_data():
-    # load pokemon data
-    pass
-
-def preprocess_data():
-    # resize to 96x96, 3 channels(rgb)
-    pass
+def load_data(path):
+    filenames = glob.glob(path + '/*.png')
+    imgs = []
+    for i,filename in enumerate(filenames):
+        img = Image.open(filename)
+        imgs.append(img)
+    array = np.asarray(imgs)
+    print("array.shape = {}".format(array.shape))
 
 if __name__ == '__main__':
     (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
     train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
     train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
+
+    # train_images = load_data("../preprocessed")
+    # train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
 
     BUFFER_SIZE = 60000
     BATCH_SIZE = 256
