@@ -26,14 +26,13 @@ def make_generator_model():
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(1, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))
-    assert model.output_shape == (None, 28, 28, 1)
+    assert model.output_shape == (None, 96, 96, 3)
 
     return model
 
 def make_discriminator_model():
     model = tf.keras.Sequential()
-    model.add(layers.Conv2D(64, (5, 5), strides=(2, 2), padding='same',
-                                     input_shape=[28, 28, 1]))
+    model.add(layers.Conv2D(64, (5, 5), strides=(2, 2), padding='same', input_shape=[96, 96, 3]))
     model.add(layers.LeakyReLU())
     model.add(layers.Dropout(0.3))
 
@@ -103,7 +102,7 @@ def generate_and_save_images(model, epoch, test_input):
     fig = plt.figure(figsize=(4,4))
     for i in range(predictions.shape[0]):
         plt.subplot(4, 4, i+1)
-        plt.imshow(predictions[i, :, :, 0] * 127.5 + 127.5, cmap='gray')
+        plt.imshow(predictions[i, :, :, 3])
         plt.axis('off')
     plt.savefig('image_at_epoch_{:04d}.png'.format(epoch))
     plt.close()
@@ -144,17 +143,15 @@ def load_data(path):
     imgs = []
     for i,filename in enumerate(filenames):
         img = Image.open(filename)
-        imgs.append(img)
-    array = np.asarray(imgs)
-    print("array.shape = {}".format(array.shape))
+        array = np.asarray(img)
+        imgs.append(array)
+    imgs = np.array(imgs)
+    return imgs
 
 if __name__ == '__main__':
-    (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
-    train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
-    train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
 
-    # train_images = load_data("../preprocessed")
-    # train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
+    train_images = load_data("../preprocessed")
+    train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
 
     BUFFER_SIZE = 60000
     BATCH_SIZE = 256
