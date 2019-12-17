@@ -161,7 +161,7 @@ def load_data(path):
 if __name__ == '__main__':
 
     train_images = load_data("../preprocessed")
-    train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('int32')
+    train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
 
     BUFFER_SIZE = 60000
     BATCH_SIZE = 256
