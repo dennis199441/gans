@@ -160,16 +160,15 @@ def load_data(path):
 
 if __name__ == '__main__':
 
+    EPOCHS = int(sys.argv[1])
+    num_examples_to_generate = int(sys.argv[2])
+    BATCH_SIZE = int(sys.argv[3]) #256
+    noise_dim = int(sys.argv[4]) # 100
+    
+    BUFFER_SIZE = 60000
     train_images = load_data("../preprocessed")
     train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
     train_images = 2 * (train_images / 255) - 1 # Normalize the images to [0, 1]
-
-    EPOCHS = int(sys.argv[1])
-    num_examples_to_generate = int(sys.argv[2])
-    BUFFER_SIZE = 60000
-    BATCH_SIZE = int(sys.argv[3]) #256
-    noise_dim = int(sys.argv[4]) # 100
-
     # Batch and shuffle the data
     train_dataset = tf.data.Dataset.from_tensor_slices(train_images).shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
 
@@ -179,7 +178,6 @@ if __name__ == '__main__':
     discriminator = make_discriminator_model()
     # decision = discriminator(generated_image)
     # print (decision)
-
     # This method returns a helper function to compute cross entropy loss
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
@@ -198,6 +196,8 @@ if __name__ == '__main__':
     seed = tf.random.normal([num_examples_to_generate, noise_dim])
     
     train(generator, discriminator, cross_entropy, seed, train_dataset, EPOCHS)
+
+    checkpoint.save(file_prefix = checkpoint_prefix)
 
     anim_file = 'dcgan.gif'
     generate_gif(anim_file)
