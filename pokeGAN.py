@@ -8,7 +8,7 @@ from PIL import Image
 
 def make_generator_model():
     model = tf.keras.Sequential()
-    model.add(layers.Dense(6*6*BATCH_SIZE, use_bias=False, input_shape=(100,)))
+    model.add(layers.Dense(6*6*BATCH_SIZE, use_bias=False, input_shape=(noise_dim,)))
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
@@ -168,7 +168,7 @@ if __name__ == '__main__':
     num_examples_to_generate = int(sys.argv[2])
     BUFFER_SIZE = 60000
     BATCH_SIZE = int(sys.argv[3]) #256
-    noise_dim = 100
+    noise_dim = int(sys.argv[4]) # 100
 
     # Batch and shuffle the data
     train_dataset = tf.data.Dataset.from_tensor_slices(train_images).shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
