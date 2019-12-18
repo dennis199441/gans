@@ -8,12 +8,12 @@ from PIL import Image
 
 def make_generator_model():
     model = tf.keras.Sequential()
-    model.add(layers.Dense(6*6*BATCH_SIZE, use_bias=False, input_shape=(noise_dim,)))
+    model.add(layers.Dense(6*6*256, use_bias=False, input_shape=(noise_dim,)))
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
-    model.add(layers.Reshape((6, 6, BATCH_SIZE)))
-    assert model.output_shape == (None, 6, 6, BATCH_SIZE) # Note: None is the batch size
+    model.add(layers.Reshape((6, 6, 256)))
+    assert model.output_shape == (None, 6, 6, 256) # Note: None is the batch size
 
     model.add(layers.Conv2DTranspose(128, (5, 5), strides=(1, 1), padding='same', use_bias=False))
     assert model.output_shape == (None, 6, 6, 128)
