@@ -112,7 +112,7 @@ def generate_and_save_images(model, epoch, test_input):
     fig = plt.figure(figsize=(4,4))
     for i in range(predictions.shape[0]):
         plt.subplot(4, 4, i+1)
-        plt.imshow(tf.dtypes.cast(predictions[i, :, :, :] * 255, tf.uint8))
+        plt.imshow(tf.dtypes.cast((predictions[i, :, :, :]+1) * 0.5 * 255, tf.uint8))
         plt.axis('off')
     plt.savefig('image_at_epoch_{:04d}.png'.format(epoch))
     plt.close()
@@ -162,7 +162,7 @@ if __name__ == '__main__':
 
     train_images = load_data("../preprocessed")
     train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
-    train_images = train_images / 255 # Normalize the images to [0, 1]
+    train_images = 2 * (train_images / 255) - 1 # Normalize the images to [0, 1]
 
     EPOCHS = int(sys.argv[1])
     num_examples_to_generate = int(sys.argv[2])
