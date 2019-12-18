@@ -8,12 +8,12 @@ from PIL import Image
 
 def make_generator_model():
     model = tf.keras.Sequential()
-    model.add(layers.Dense(6*6*256, use_bias=False, input_shape=(100,)))
+    model.add(layers.Dense(6*6*BATCH_SIZE, use_bias=False, input_shape=(100,)))
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
-    model.add(layers.Reshape((6, 6, 256)))
-    assert model.output_shape == (None, 6, 6, 256) # Note: None is the batch size
+    model.add(layers.Reshape((6, 6, BATCH_SIZE)))
+    assert model.output_shape == (None, 6, 6, BATCH_SIZE) # Note: None is the batch size
 
     model.add(layers.Conv2DTranspose(128, (5, 5), strides=(1, 1), padding='same', use_bias=False))
     assert model.output_shape == (None, 6, 6, 128)
@@ -164,8 +164,10 @@ if __name__ == '__main__':
     train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
     train_images = train_images / 255 # Normalize the images to [0, 1]
 
+    EPOCHS = int(sys.argv[1])
+    num_examples_to_generate = int(sys.argv[2])
     BUFFER_SIZE = 60000
-    BATCH_SIZE = 256
+    BATCH_SIZE = int(sys.argv[3]) #256
     noise_dim = 100
 
     # Batch and shuffle the data
@@ -190,8 +192,6 @@ if __name__ == '__main__':
                                      discriminator_optimizer=discriminator_optimizer,
                                      generator=generator, discriminator=discriminator)
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
-    EPOCHS = int(sys.argv[1])
-    num_examples_to_generate = int(sys.argv[2])
 
     # We will reuse this seed overtime (so it's easier)
     # to visualize progress in the animated GIF)
