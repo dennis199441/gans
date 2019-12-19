@@ -44,10 +44,12 @@ def make_discriminator_model():
     model = tf.keras.Sequential()
     model.add(layers.Conv2D(64, (5, 5), strides=(2, 2), padding='same', input_shape=[96, 96, 3]))
     model.add(layers.LeakyReLU())
+    model.add(layers.AveragePooling2D(pool_size=(2, 2)))
     model.add(layers.Dropout(0.3))
 
     model.add(layers.Conv2D(128, (5, 5), strides=(2, 2), padding='same'))
     model.add(layers.LeakyReLU())
+    model.add(layers.AveragePooling2D(pool_size=(2, 2)))
     model.add(layers.Dropout(0.3))
 
     model.add(layers.Flatten())
@@ -164,7 +166,7 @@ if __name__ == '__main__':
     num_examples_to_generate = int(sys.argv[2])
     BATCH_SIZE = int(sys.argv[3]) #256
     noise_dim = int(sys.argv[4]) # 100
-    
+
     BUFFER_SIZE = 60000
     train_images = load_data("../preprocessed")
     train_images = train_images.reshape(train_images.shape[0], 96, 96, 3).astype('float32')
